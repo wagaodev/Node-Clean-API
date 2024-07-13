@@ -3,5 +3,5 @@
   "bracketSameLine": true,
   "bracketSpacing": true,
   "trailingComma": "all",
-  "singleQuote": true
+  "singleQuote": false
 }

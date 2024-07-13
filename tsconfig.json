@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "target": "ES6",
     "module": "commonjs",
-    "target": "ES2023",
-    "esModuleInterop": true,
-    "allowJs": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
