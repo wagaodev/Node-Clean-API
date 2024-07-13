@@ -1,0 +1,12 @@
+version: 1
+exclusions:
+  paths:
+    - '**/*.test.js'
+    - '**/*.spec.js'
+    - '**/*.test.ts'
+    - '**/*.spec.ts'
+  extensions:
+    - '.test.js'
+    - '.spec.js'
+    - '.test.ts'
+    - '.spec.ts'
