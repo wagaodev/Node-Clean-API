@@ -1,5 +1,5 @@
-import { HttpRequest, HttpResponse } from "./http";
+import { HttpRequestProtocol, HttpResponseProtocol } from "./http";
 
-export interface Controller {
-  handle(httpRequest: HttpRequest): HttpResponse;
+export interface ControllerProtocol {
+  handle(httpRequest: HttpRequestProtocol): HttpResponseProtocol;
 }
