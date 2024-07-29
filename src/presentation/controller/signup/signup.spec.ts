@@ -3,7 +3,7 @@ import {
   AddAccount,
   AccountModel,
   AddAccountModel,
-} from "./signup-protocols";
+} from ".";
 import {
   InvalidParamError,
   MissingParamError,

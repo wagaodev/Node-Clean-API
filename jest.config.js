@@ -7,4 +7,9 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "/src/.*/index.ts",
+    "/src/.*/index.js",
+  ],
 };

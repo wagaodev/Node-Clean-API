@@ -4,7 +4,7 @@ import {
   ControllerProtocol,
   EmailValidatorProtocol,
   AddAccount,
-} from "../signup/signup-protocols";
+} from "../signup";
 import { InvalidParamError, MissingParamError } from "../../errors";
 import { badRequest, ok, serverError } from "../../helpers";
 
