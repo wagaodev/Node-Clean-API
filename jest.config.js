@@ -12,4 +12,5 @@ module.exports = {
     "/src/.*/index.ts",
     "/src/.*/index.js",
   ],
+  testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
 };
