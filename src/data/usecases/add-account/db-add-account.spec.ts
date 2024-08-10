@@ -1,9 +1,15 @@
-import { EncrypterProtocol } from "../../protocols/encrypter";
+import {
+  AccountModel,
+  AddAccountModel,
+  AddAccountRepositoryProtocol,
+  EncrypterProtocol,
+} from ".";
 import { DbAddAccount } from "./db-add-account";
 
 interface SutType {
   sut: DbAddAccount;
   encrypterStub: EncrypterProtocol;
+  AddAccountRepositoryStub: AddAccountRepositoryProtocol;
 }
 
 const makeEncrypter = (): EncrypterProtocol => {
@@ -15,12 +21,29 @@ const makeEncrypter = (): EncrypterProtocol => {
   return new EncrypterStub();
 };
 
+const makeAddAccountRepository = (): AddAccountRepositoryProtocol => {
+  class AddAccountRepositoryStub implements AddAccountRepositoryProtocol {
+    async add(accountData: AddAccountModel): Promise<AccountModel> {
+      const fakeAccount = {
+        id: "valid_id",
+        name: "valid_name",
+        email: "valid_email",
+        password: "hashed_password",
+      };
+      return new Promise((resolve) => resolve(fakeAccount));
+    }
+  }
+  return new AddAccountRepositoryStub();
+};
+
 const makeSut = (): SutType => {
   const encrypterStub = makeEncrypter();
-  const sut = new DbAddAccount(encrypterStub);
+  const AddAccountRepositoryStub = makeAddAccountRepository();
+  const sut = new DbAddAccount(encrypterStub, AddAccountRepositoryStub);
   return {
     sut,
     encrypterStub,
+    AddAccountRepositoryStub,
   };
 };
 
@@ -50,5 +73,20 @@ describe("DbAddAccount Usecase", () => {
     };
     const account = sut.add(accountData);
     await expect(account).rejects.toThrow();
+  });
+  it("Should call AddAccountRepository with correct values", async () => {
+    const { sut, AddAccountRepositoryStub } = makeSut();
+    const addSpy = jest.spyOn(AddAccountRepositoryStub, "add");
+    const accountData = {
+      name: "valid_name",
+      email: "valid_email",
+      password: "valid_password",
+    };
+    await sut.add(accountData);
+    expect(addSpy).toHaveBeenCalledWith({
+      name: "valid_name",
+      email: "valid_email",
+      password: "hashed_password",
+    });
   });
 });
