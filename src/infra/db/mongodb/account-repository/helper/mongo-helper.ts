@@ -1,4 +1,4 @@
-import { MongoClient, Collection } from "mongodb";
+import { MongoClient, Collection, ObjectId } from "mongodb";
 
 export const MongoHelper = {
   client: null as MongoClient | null,
@@ -30,5 +30,15 @@ export const MongoHelper = {
     if (!this.client) {
       throw new Error("MongoClient not initialized");
     }
+  },
+  async findByIdAndMap<T>(
+    collectionName: string,
+    id: ObjectId,
+  ): Promise<T | null> {
+    const collection = this.getCollection(collectionName);
+    const result = await collection.findOne({ _id: id });
+    if (!result) return null;
+    const { _id, ...documentWithoutId } = result;
+    return { ...documentWithoutId, id: _id.toHexString() } as T;
   },
 };
