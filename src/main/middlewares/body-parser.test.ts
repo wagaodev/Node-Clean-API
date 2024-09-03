@@ -11,4 +11,13 @@ describe("Body Parser Middleware", () => {
       .send({ name: "Wagner" })
       .expect({ name: "Wagner" });
   });
+  it("Should return xml content type when forced", async () => {
+    app.post("/test_content_type_xml", (req, res) => {
+      res.type("xml");
+      res.send("");
+    });
+    await request(app)
+      .post("/test_content_type_xml")
+      .expect("content-type", /xml/);
+  });
 });
