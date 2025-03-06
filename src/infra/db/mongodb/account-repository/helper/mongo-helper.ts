@@ -21,7 +21,7 @@ export const MongoHelper = {
     return this.client as MongoClient;
   },
 
-  getCollection(name: string): Collection {
+  async getCollection(name: string): Promise<Collection> {
     this.ensureClientInitialized();
     return this.client!.db().collection(name);
   },
@@ -35,7 +35,7 @@ export const MongoHelper = {
     collectionName: string,
     id: ObjectId,
   ): Promise<T | null> {
-    const collection = this.getCollection(collectionName);
+    const collection = await this.getCollection(collectionName);
     const result = await collection.findOne({ _id: id });
     if (!result) return null;
     const { _id, ...documentWithoutId } = result;
