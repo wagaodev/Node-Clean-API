@@ -2,18 +2,31 @@ import { MongoClient, Collection, ObjectId } from "mongodb";
 
 export const MongoHelper = {
   client: null as MongoClient | null,
+  uri: "" as string,
 
-  async connect(uri: string): Promise<void> {
-    if (!this.client) {
-      this.client = new MongoClient(uri);
+  async connect(uri?: string): Promise<void> {
+    if (uri) this.uri = uri;
+    if (!this.uri) throw new Error("Mongo URI is not defined");
+
+    if (!this.client || !(await this.isConnected())) {
+      this.client = new MongoClient(this.uri);
       await this.client.connect();
     }
   },
 
   async disconnect(): Promise<void> {
-    this.ensureClientInitialized();
     await this.client?.close();
     this.client = null;
+  },
+
+  async isConnected(): Promise<boolean> {
+    if (!this.client) return false;
+    try {
+      await this.client.db().command({ ping: 1 });
+      return true;
+    } catch {
+      return false;
+    }
   },
 
   getClient(): MongoClient {
@@ -22,7 +35,9 @@ export const MongoHelper = {
   },
 
   async getCollection(name: string): Promise<Collection> {
-    this.ensureClientInitialized();
+    if (!this.client || !(await this.isConnected())) {
+      await this.connect();
+    }
     return this.client!.db().collection(name);
   },
 
@@ -31,6 +46,7 @@ export const MongoHelper = {
       throw new Error("MongoClient not initialized");
     }
   },
+
   async findByIdAndMap<T>(
     collectionName: string,
     id: ObjectId,

@@ -31,4 +31,18 @@ describe("Account Mongo Repository", () => {
     expect(account.email).toEqual("any_email@mail.com");
     expect(account.password).toEqual("any_password");
   });
+
+  it("Should throw an error if findByIdAndMap returns null", async () => {
+    const sut = makeSut();
+
+    jest.spyOn(MongoHelper, "findByIdAndMap").mockResolvedValueOnce(null);
+
+    const promise = sut.add({
+      name: "any_name",
+      email: "any_email@mail.com",
+      password: "any_password",
+    });
+
+    await expect(promise).rejects.toThrow(new Error("Account not found"));
+  });
 });
